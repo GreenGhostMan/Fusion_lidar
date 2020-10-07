@@ -107,9 +107,11 @@ std::unordered_set<int> Ransac(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, int ma
 	return inliersResult;
 }
 
-// template<typename PointT>  
+  
 std::unordered_set<int> RansacPlane(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, int maxIterations, float distanceTol)
 {
+  auto startTime = std::chrono::steady_clock::now();
+
   std::unordered_set<int> inliersResult;
 
   srand(time(NULL));
@@ -156,14 +158,14 @@ std::unordered_set<int> RansacPlane(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, i
       if (dist < distanceTol)
         curr_inliers.insert(i);
     }
-
     if (curr_inliers.size() > inliersResult.size())
       inliersResult = curr_inliers;
 
-  }
-  
+  }  
+  auto endTime = std::chrono::steady_clock::now();
+  auto elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime);
+  std::cout<< "plane segmentation took " << elapsedTime.count() << "millisecondes" << std::endl;
   return inliersResult;
-
 }
 int main ()
 {
