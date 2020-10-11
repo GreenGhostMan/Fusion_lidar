@@ -1,6 +1,12 @@
 {
     "files.associations": {
         "start_kinetic": "bat",
-        "variant": "cpp"
+        "variant": "cpp",
+        "unordered_map": "cpp",
+        "unordered_set": "cpp",
+        "functional": "cpp",
+        "deque": "cpp",
+        "string": "cpp",
+        "vector": "cpp"
     }
 }
