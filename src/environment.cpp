@@ -7,7 +7,8 @@
 #include "processPointClouds.h"
 // using templates for processPointClouds so also include .cpp to help linker
 #include "processPointClouds.cpp"
-
+bool render_box = true;
+bool render_cluster = true;
 std::vector<Car> initHighway(bool renderScene, pcl::visualization::PCLVisualizer::Ptr& viewer)
 {
 
@@ -61,10 +62,17 @@ void simpleHighway(pcl::visualization::PCLVisualizer::Ptr& viewer)
 
     for(pcl::PointCloud<pcl::PointXYZ>::Ptr cluster : cloudClusters)
     {
-        std::cout << "cluster size ";
-        point_processor.numPoints(cluster);
-        renderPointCloud(viewer, cluster, "obstCloud"+std::to_string(clusterId), colors[clusterId%colors.size()] );
-
+        if(render_cluster)
+        {
+            std::cout << "cluster size ";
+            point_processor.numPoints(cluster);
+            renderPointCloud(viewer, cluster, "obstCloud"+std::to_string(clusterId), colors[clusterId%colors.size()] );
+        }
+        if(render_box)
+        {
+            Box box = point_processor.BoundingBox(cluster);
+            renderBox(viewer, box, clusterId);
+        }
         ++clusterId;
     }
 }
