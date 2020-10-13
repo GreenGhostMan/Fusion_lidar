@@ -43,10 +43,13 @@ void cityBlock(pcl::visualization::PCLVisualizer::Ptr& viewer)
     constexpr float X{ 30.0 }, Y{ 6.5 }, Z{ 2.5 };
  
     auto filteredCloud = pointProcessor.FilterCloud( inputCloud,
-                                0.1f,
+                                0.2f,
                                 Eigen::Vector4f(-(X / 2), -Y, -Z, 1),
                                 Eigen::Vector4f(X, Y, Z, 1));
-    renderPointCloud(viewer, filteredCloud, "filteredCloud");
+
+    std::pair<pcl::PointCloud<pcl::PointXYZI>::Ptr, pcl::PointCloud<pcl::PointXYZI>::Ptr> segmentCloud = pointProcessor.SegmentPlane( filteredCloud,100,0.2);
+    renderPointCloud(viewer, segmentCloud.first, "Obstacle Cloud", Color(1,0,0));
+    renderPointCloud(viewer, segmentCloud.second, "Plane Cloud", Color(0,1,0));
 }
 
 
