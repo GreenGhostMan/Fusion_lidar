@@ -48,8 +48,23 @@ void cityBlock(pcl::visualization::PCLVisualizer::Ptr& viewer)
                                 Eigen::Vector4f(X, Y, Z, 1));
 
     std::pair<pcl::PointCloud<pcl::PointXYZI>::Ptr, pcl::PointCloud<pcl::PointXYZI>::Ptr> segmentCloud = pointProcessor.SegmentPlane( filteredCloud,100,0.2);
-    renderPointCloud(viewer, segmentCloud.first, "Obstacle Cloud", Color(1,0,0));
-    renderPointCloud(viewer, segmentCloud.second, "Plane Cloud", Color(0,1,0));
+    if( segmentCloud.first->empty() || segmentCloud.second->empty() ) { return; }
+
+    const std::vector<pcl::PointCloud<pcl::PointXYZI>::Ptr> cloudClusters = pointProcessor.Clustering(segmentCloud.first, 0.3,30, 1775);
+    if(cloudClusters.empty()) { return; }
+
+    int clusterId{0}, colorIndex{0};
+
+    const std::vector<Color> colors{ Color(1,0,1), Color(0,1,1), Color(1,1,0) };
+
+    for( pcl::PointCloud<pcl::PointXYZI>::Ptr cluster : cloudClusters )
+    {
+        renderPointCloud( viewer, cluster, "obstCloud"+std::to_string(clusterId), colors.at(colorIndex) );
+
+        ++clusterId;
+        ++colorIndex;
+        colorIndex %=colors.size();
+    }
 }
 
 
